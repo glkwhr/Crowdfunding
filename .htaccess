@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the requested file exists
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # If the requested file doesn't exists, rewrite to index.php?url=<PARAMS>
+    # <domain>item/index  ==>  <domain>index.php?url=item/index
+    # Use GET['url'] to get string "item/index"
+    RewriteRule ^(.*)$ index.php?url=$1 [PT,L]
+</IfModule>
