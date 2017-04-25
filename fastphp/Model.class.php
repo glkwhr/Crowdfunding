@@ -2,6 +2,7 @@
 class Model extends Sql {
 	protected $_model;
 	protected $_table;
+	protected $_primaryKey;
 
 	public function __construct() {
 		// Connect to DB
@@ -14,5 +15,14 @@ class Model extends Sql {
 		
 		// The table name should be the same as the Class
 		$this->_table = strtolower($this->_model);
+		
+		switch ($this->_table) {
+			case 'user':
+				$this->_primaryKey = 'uname';
+				break;
+			case 'project':
+				$this->_primaryKey = 'pid';
+				break;
+		}
 	}
 }

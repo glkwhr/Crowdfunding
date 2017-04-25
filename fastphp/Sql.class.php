@@ -43,18 +43,17 @@ class Sql {
 		return $sth->fetchAll();
 	}
 
-	public function select($id) {
-		$sql = sprintf("select * from `%s` where `id` = '%s'", $this->_table, $id);
+	public function select($cols = array(), $id) {
+		$sql = sprintf("select %s from `%s` where `%s` = :id", $this->formatSelect($cols), $this->_table, $this->_primaryKey);
 		$sth = $this->_dbHandle->prepare($sql);
-		$sth->execute();
-		
-		return $sth->fetch();
+		$sth->execute(array (':id' => $id));
+		return $sth->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function delete($id) {
-		$sql = sprintf("delete from `%s` where `id` = '%s'", $this->_table, $id);
+		$sql = sprintf("delete from `%s` where `%s` = :id", $this->_table, $this->_primaryKey);
 		$sth = $this->_dbHandle->prepare($sql);
-		$sth->execute();
+		$sth->execute(array (':id' => $id));
 		
 		return $sth->rowCount();
 	}
@@ -76,6 +75,23 @@ class Sql {
 		$sql = sprintf("update `%s` set %s where `id` = '%s'", $this->_table, $this->formatUpdate($data), $id);
 		
 		return $this->query($sql);
+	}
+	
+	private function formatSelect($cols) {
+		$ret = '';
+		if (!empty($cols)) {
+			if (is_array($cols)) {
+				foreach ($cols as &$col) {
+					$col = '`' . $col . '`';
+				}
+				$ret = implode(',', $cols);
+			} else {
+				$ret = $cols;
+			}
+		} else {
+			$ret = '*';
+		}
+		return $ret;
 	}
 	
 	// Convert array to insertion queries
