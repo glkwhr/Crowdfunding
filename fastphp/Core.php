@@ -36,15 +36,18 @@ class Core {
 		}
 		
 		$controller = $controllerName . 'Controller';
-		$dispatch = new $controller($controllerName, $action);
 		
 		if ((int)method_exists($controller, $action)) {
+			//error_log($action);
+			$dispatch = new $controller($controllerName, $action);
 			call_user_func_array(array(
 					$dispatch,
 					$action 
 			), $param);
 		} else {
-			exit($controller . "Controller does not exist.");
+			header('location:' . APP_URL);
+			//error_log($controller . " Controller does not exist.");
+			//exit($controller . "Controller does not exist.");
 		}
 	}
 
