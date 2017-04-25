@@ -7,25 +7,29 @@
 <?php case 'failed': ?>
 <!-- TODO: Show error message -->
 <?php if (isset($errors)) { extract($errors); } ?>
-<div class="alert">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<strong>Warning!</strong> <?php if (isset($error)): echo $error; else:?>Failed to log in! Please retry.<?php endif?>
-</div>
 <?php case 'login': ?>
 <!-- Show registration form -->
-<div class="hero-unit">
-<h2><?php echo $title ?></h2>
-<form action="<?php echo APP_URL ?>/user/login" method="post">
-	<label>Username</label>
-	<input type="text" name="usrname" required="required">
-	<br>
-	<label>Password</label> 
-	<input type="password" name="pwd" required="required"> 
-	<br>
-	<input type="checkbox" name="remember" value="true"> Remeber Me <br> 
-	<br> <br> 
-	<input type="submit" value="Login">
+<form class="jumbotron center-block" style="max-width: 600px;" action="<?php echo APP_URL ?>/user/login" method="post">
+  <div class="form-group <?php if (isset($error)) { echo 'has-error'; }?>">
+    <h2><?php echo $title ?></h2>
+    <?php if (isset($error)): ?>
+	<span class="help-block"><?php echo $error?></span>
+	<?php endif?>
+  </div>
+  <div class="form-group <?php if (isset($error)) { echo 'has-error'; }?>">
+	<label class="control-label">Username</label>
+	<input type="text" class="form-control" name="usrname" required="required" placeholder="Username">
+  </div>
+  <div class="form-group <?php if (isset($error)) { echo 'has-error'; }?>">
+	<label class="control-label">Password</label> 
+	<input type="password" class="form-control" name="pwd" required="required" placeholder="Password"> 
+  </div>
+  <div class="checkbox">
+    <label>
+	  <input type="checkbox" name="remember" value="true"> Remeber Me
+	</label>
+  </div>
+  <button type="submit" role="button" class="btn btn-default btn-lg">Log in</button>
 </form>
 <?php endswitch ?>
-</div>
 </div>
