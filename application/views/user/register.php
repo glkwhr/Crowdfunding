@@ -13,15 +13,15 @@
 <!-- Show registration form -->
 <form action="<?php echo APP_URL ?>/user/register" method="post">
 	<label>Username</label> <br /> 
-	<input type="text" name="usrname">
+	<input type="text" name="usrname" required="required">
 	<span class="error"><?php if (isset($unameError)) { echo $unameError; }?></span>
 	<br /> <br /> 
 	<label>Password</label>	<br /> 
-	<input type="password" name="pwd"> 
+	<input type="password" name="pwd" required="required"> 
 	<span class="error"><?php if (isset($upwdError)) { echo $upwdError; }?></span>
 	<br /> <br /> 
 	<label>Real	Name</label> <br /> 
-	<input type="text" name="realname"> 
+	<input type="text" name="realname" required="required"> 
 	<span class="error"><?php if (isset($nameError)) { echo $nameError; }?></span>
 	<br /> <br /> 
 	<label>Credit Card Number</label> <br /> 

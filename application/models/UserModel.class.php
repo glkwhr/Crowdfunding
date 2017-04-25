@@ -59,12 +59,38 @@ class UserModel extends Model {
 	}
 	
 	private function hasUname($uname) {
-		$uname = $this->_dbHandle->quote($uname);
-		$sql = sprintf("select * from `user` where `uname` = %s", $uname);
-		$ret = False;
-		if ($this->query($sql) == 1) {
-			$ret = True;
+		$ret = false;
+		if ($this->select($uname)) {
+			$ret = true;
 		}
 		return $ret;
+	}
+	
+	public function checkLogin() {
+		if (session_status() == PHP_SESSION_NONE) {
+		    session_start();
+		}
+		$ret = false;
+		if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
+			if (!empty($_COOKIE['username']) && !empty($_COOKIE['password'])) {
+				// use cookies to login
+				$user = $this->login($_COOKIE['username'], $_COOKIE['password']);
+				if (!empty($user)) {
+					$_SESSION['user'] = $user;
+					$ret = true;
+				}
+			}
+		} else {
+			$ret = true;
+		}
+		return $ret;
+	}
+	
+	public function login($username, $password) {
+		$user = array();
+		if (($upwd = $this->select('upwd', $username)) && password_verify($password, $upwd['upwd'])) {
+			$user['username'] = $username;
+		}
+		return $user;
 	}
 }
