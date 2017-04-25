@@ -15,12 +15,6 @@ if (session_status() == PHP_SESSION_NONE) {
         padding-bottom: 40px;
       }
     </style>
-    <link href="<?php echo APP_URL?>/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="../assets/js/html5shiv.js"></script>
-    <![endif]-->
     
 	<title>Crowdfunding</title>
 </head>
