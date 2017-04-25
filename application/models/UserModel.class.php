@@ -42,7 +42,7 @@ class UserModel extends Model {
 				case 'email':
 					// TODO validate email address
 					if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-						$errors['emailError'] = "invalid email";
+						$errors['emailError'] = "invalid email address";
 					}
 					break;
 				case 'addr':
