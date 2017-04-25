@@ -43,7 +43,7 @@ class Sql {
 		return $sth->fetchAll();
 	}
 
-	public function select($cols = array(), $id) {
+	public function select($id, $cols = array()) {
 		$sql = sprintf("select %s from `%s` where `%s` = :id", $this->formatSelect($cols), $this->_table, $this->_primaryKey);
 		$sth = $this->_dbHandle->prepare($sql);
 		$sth->execute(array (':id' => $id));

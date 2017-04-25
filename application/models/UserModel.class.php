@@ -68,7 +68,7 @@ class UserModel extends Model {
 	
 	public function checkLogin() {
 		if (session_status() == PHP_SESSION_NONE) {
-		    session_start();
+			session_start();
 		}
 		$ret = false;
 		if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
@@ -88,7 +88,7 @@ class UserModel extends Model {
 	
 	public function login($username, $password) {
 		$user = array();
-		if (($upwd = $this->select('upwd', $username)) && password_verify($password, $upwd['upwd'])) {
+		if (($upwd = $this->select($username, 'upwd')) && password_verify($password, $upwd['upwd'])) {
 			$user['username'] = $username;
 		}
 		return $user;
