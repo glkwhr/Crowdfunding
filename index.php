@@ -8,6 +8,5 @@ define('APP_DEBUG', true);
 
 // root URL
 define('APP_URL', 'http://localhost/crowdfunding');
-
 // load framwork
 require './fastphp/Fastphp.php';
