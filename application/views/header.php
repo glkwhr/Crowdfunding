@@ -39,7 +39,7 @@ if (session_status() == PHP_SESSION_NONE) {
     
       <ul class="nav navbar-nav navbar-left">
         <li>
-	      <form class="navbar-form" action="<?php echo APP_URL ?>/project/search" method="get">
+	      <form class="navbar-form" action="<?php echo APP_URL ?>/project/search" method="post">
 	        <div class="input-group">
 	          <input type="text" class="form-control" name="keyword" placeholder="Search Projects...">
 	          <span class="input-group-btn">
@@ -61,6 +61,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <li><a href="<?php echo APP_URL?>/user/profile">Profile</a></li>
             <li><a href="<?php echo APP_URL?>/user/profile">My Projects</a></li>
             <li><a href="<?php echo APP_URL?>/user/profile">My Pledges</a></li>
+            <li><a href="<?php echo APP_URL?>/user/history">Browsing History</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="<?php echo APP_URL?>/user/logout">Logout</a></li>
           </ul>
