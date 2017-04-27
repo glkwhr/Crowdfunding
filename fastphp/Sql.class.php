@@ -40,7 +40,7 @@ class Sql {
 		$sth = $this->_dbHandle->prepare($sql);
 		$sth->execute();
 		
-		return $sth->fetchAll();
+		return $sth->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function select($id, $cols = array()) {
