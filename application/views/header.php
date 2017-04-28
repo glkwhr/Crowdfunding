@@ -53,7 +53,7 @@ if (session_status() == PHP_SESSION_NONE) {
       <ul class="nav navbar-nav navbar-right">	    
 	    <?php if ((new UserModel())->checkLogin()): ?> 
 	    <li><a href="<?php echo APP_URL?>/user/home">Home</a></li>
-	    <li><a href="<?php echo APP_URL?>/project">Projects</a></li>
+	    <li><a href="<?php echo APP_URL?>/project/search">Projects</a></li>
 	    
 	    <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['user']['username']?><span class="caret"></span></a>
@@ -68,7 +68,7 @@ if (session_status() == PHP_SESSION_NONE) {
         </li>
 	    <?php else: ?>
 	    <li><a href="<?php echo APP_URL?>/">Home</a></li>
-	    <li><a href="<?php echo APP_URL?>/project">Projects</a></li>
+	    <li><a href="<?php echo APP_URL?>/project/search">Projects</a></li>
 	    <li><a href="<?php echo APP_URL?>/user/register">Register</a></li> 
 	    <li><a href="<?php echo APP_URL?>/user/login">Login</a></li> 
 	    <?php endif?>

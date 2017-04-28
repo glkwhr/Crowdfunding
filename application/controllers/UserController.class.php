@@ -106,4 +106,12 @@ class UserController extends Controller {
 			header("location:" . APP_URL . "/user/login");
 		}
 	}
+	
+	function profile() {
+		
+	}
+	
+	function history() {
+		
+	}
 }
