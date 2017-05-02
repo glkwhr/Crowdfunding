@@ -2,13 +2,16 @@
 class ProjectController extends Controller {
 	
 	function search() {
-		if (isset($_POST['keyword']) && !empty($_POST['keyword'])) {
-			
-		} else {
-			// show all
-			$result = (new ProjectModel())->selectAll();
+		$projectModel = new ProjectModel();
+		$keyword = '';
+		if (isset($_POST['keyword'])) {
+			$keyword = $this->getInput($_POST['keyword']);
 		}
-		$this->assign('result', $result);
+		$this->assign('result', $projectModel->selectKeyword($keyword));
 		$this->render();
+	}
+	
+	function create() {
+		
 	}
 }

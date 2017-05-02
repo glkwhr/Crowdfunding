@@ -1,7 +1,14 @@
 <?php
 class Sql {
+	
+	const LOGIC_AND = 1;
+	const LOGIC_OR = 2;
+	const OP_EQ = 3;
+	const OP_LIKE = 4;
+	
 	protected $_dbHandle;
 	protected $_result;
+	
 	private $filter = '';
 
 	// TODO improve security against sql injection
@@ -17,10 +24,10 @@ class Sql {
 		}
 	}
 
-	public function where($where = array()) {
-		if (isset($where)) {
+	public function where($filter) {
+		if (!empty($filter)) {
 			$this->filter .= ' WHERE ';
-			$this->filter .= implode(' ', $where);
+			$this->filter .= $filter;
 		}
 		
 		return $this;
@@ -75,6 +82,37 @@ class Sql {
 		$sql = sprintf("update `%s` set %s where `id` = '%s'", $this->_table, $this->formatUpdate($data), $id);
 		
 		return $this->query($sql);
+	}
+	
+	protected function getFilter($conds, $op, $logic) {
+		$ret = '';
+		switch ($op) {
+			case Sql::OP_EQ:
+				$op = '=';
+				break;
+			case Sql::OP_LIKE:
+				$op = 'like';
+				break;
+			default:
+				break;
+		}
+		switch ($logic) {
+			case Sql::LOGIC_AND:
+				$logic = ' and ';
+				break;
+			case Sql::LOGIC_OR:
+				$logic = ' or ';
+				break;
+			default:
+				break;
+		}
+		foreach ($conds as $key => $value) {
+			if (!empty($ret)) {
+				$ret .= $logic;
+			}
+			$ret .= '`' . $key . '`' . $op . $this->_dbHandle->quote($value);
+		}
+		return $ret;
 	}
 	
 	private function formatSelect($cols) {
