@@ -12,6 +12,10 @@ class ProjectModel extends Model {
 		return $this->selectAll();
 	}
 	
+	function add($data) {
+		return false;
+	}
+	
     function isInvalid($data) {
          $errors = array();
          foreach ($data as $type => $value) {
