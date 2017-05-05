@@ -16,10 +16,10 @@ class ProjectModel extends Model {
 		if (session_status() == PHP_SESSION_NONE) {
 			session_start();
 		}
-		$Model = new Sql();
 		$data['pid'] = $this->count()['count(pid)'] + 1;
-
-
+		if (isset($data['profpic'])) {
+			$data['profpic'] = $this->acceptFile($data['profpic']);
+		}
 		$data['uname'] = $_SESSION['user']['username'];
 		$data['curamount'] = 0;
 		$data['posttime'] = date("Y-m-d");
@@ -46,6 +46,7 @@ class ProjectModel extends Model {
 				case 'description' :
 					break;
 				case 'profpic' :
+					// TODO validate the file
 					break;
 				case 'tag' :
 					if (! preg_match("/^[a-zA-Z ]*(,[a-zA-Z ]*)*$/", $value)) {
@@ -127,5 +128,12 @@ class ProjectModel extends Model {
 			}
 		}
 		return $errors;
+	}
+
+	private function acceptFile($file) {
+		$uptype = explode(".", $file["name"]);
+		$newname = date("Y-m-d-h-m-s") . ".".$uptype[1];
+		move_uploaded_file($file["tmp_name"], IMG_PROJ_PATH . "profile/" . $newname);
+		return $newname;
 	}
 }

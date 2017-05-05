@@ -81,7 +81,6 @@ class Sql {
 
 	public function add($data) {
 		$sql = sprintf("insert into `%s` %s", $this->_table, $this->formatInsert($data));
-
 		return $this->query($sql);
 	}
 

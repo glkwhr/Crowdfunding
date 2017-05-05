@@ -1,12 +1,11 @@
 <div class="container">
-<?php 
-$count = 0;
-foreach ($result as $row): 
-	if ($count % 4 == 0): echo "<div class=\"row\">"; endif;
-?>
-  <div class="col-md-3">
+<div class="row">
+<?php foreach ($result as $row): ?>
+  <div class="col-xs-12 col-md-6">
     <div class="thumbnail">
-      <img src="<?php echo APP_URL . "/assets/img/project/profile/" . (empty($row['profpic']) ? "default.png" : $row['profpic'])?>" alt="Project Profile Picture">
+      <a href="#">
+        <img style="height: 300px" src="<?php echo APP_URL . IMG_PROJ_URL . "profile/" . (empty($row['profpic']) ? "default.png" : $row['profpic'])?>" alt="Project Profile Picture">
+      </a>
       <div class="caption">
         <h3><?php echo $row['pname'] ?></h3>
         <p><?php echo $row['description'] ?></p>
@@ -14,8 +13,6 @@ foreach ($result as $row):
       </div>
     </div>
   </div>
-<?php
-$count += 1;
-if ($count % 4 == 0): echo "</div>"; endif; ?>
 <?php endforeach ?>
+</div>
 </div>
