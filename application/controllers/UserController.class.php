@@ -63,7 +63,7 @@ class UserController extends Controller {
 				$data = $this->getData();
 				// 1. validate input data 2. assign error message
 				$userModel = new UserModel();
-				if ($res = $userModel->isInvalid($data)) {
+				if ($res = $userModel->isInvalidInsert($data)) {
 					$this->assign('errors', $res);
 					$this->assign('mode', 'failed');
 				} else {
@@ -94,7 +94,44 @@ class UserController extends Controller {
 	}
 	
 	function profile() {
-		
+		$userModel = new UserModel();
+		if ($userModel->checkLogin()) {
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				$data = $this->getData();
+				$res = array();
+				if (empty($userModel->login($data['uname'], $data['upwd'])) || $res = $userModel->isInvalidUpdate($data)) {
+					if (empty($res)) {
+						$res['upwdError'] = "wrong password";
+					}
+					$this->assign('errors', $res);
+					$this->assign('mode', 'failed');
+				} else {
+					if (isset($data['newpwd'])) {
+						$data['upwd'] = $data['newpwd'];
+						unset($data['newpwd']);
+					}
+					$data['upwd'] = password_hash($data['upwd'], PASSWORD_DEFAULT);
+					if ($userModel->update($data['uname'], $data)) {
+						// successfully updated
+						$this->assign('mode', 'succeeded');
+					} else {
+						// failed to update
+						$this->assign('mode', 'failed');
+					}
+				}
+			} else {
+				$this->assign('mode', 'profile');
+			}
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$data = $userModel->select($_SESSION['user']['username']);
+			$this->assign('data', $data);
+			$this->assign('title', 'Profile');
+			$this->render();
+		} else {
+			header("location:" . APP_URL . "/user/login");
+		}
 	}
 	
 	function history() {
@@ -105,6 +142,9 @@ class UserController extends Controller {
 		$data['uname'] = $this->getInput($_POST['usrname']);
 		$data['upwd'] = $this->getInput($_POST['pwd']);
 		$data['name'] = $this->getInput($_POST['realname']);
+		if (isset($_POST['newpwd']) && !empty($_POST['newpwd'])) {
+			$data['newpwd'] = $this->getInput($_POST['newpwd']);
+		}
 		if (!empty($_POST['creditcardnum'])) {
 			$data['ccn'] = $this->getInput($_POST['creditcardnum']);
 		}

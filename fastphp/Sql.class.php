@@ -86,9 +86,10 @@ class Sql {
 	}
 
 	public function update($id, $data) {
-		$sql = sprintf("update `%s` set %s where `id` = '%s'", $this->_table, $this->formatUpdate($data), $id);
-
-		return $this->query($sql);
+		$sql = sprintf("update `%s` set %s where `%s` = :id", $this->_table, $this->formatUpdate($data), $this->_primaryKey);
+		$sth = $this->_dbHandle->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		return $sth->rowCount();
 	}
 
 	protected function getFilter($conds, $op, $logic) {
@@ -158,7 +159,7 @@ class Sql {
 	private function formatUpdate($data) {
 		$fields = array();
 		foreach ($data as $key => $value) {
-			$fields[] = sprintf("`%s` = '%s'", $key, $value);
+			$fields[] = sprintf("`%s` = %s", $key, $this->_dbHandle->quote($value));
 		}
 
 		return implode(',', $fields);
