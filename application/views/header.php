@@ -65,8 +65,8 @@ if (session_status() == PHP_SESSION_NONE) {
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['user']['username']?><span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="<?php echo APP_URL?>/user/profile">Profile</a></li>
-            <li><a href="<?php echo APP_URL?>/user/profile">My Projects</a></li>
-            <li><a href="<?php echo APP_URL?>/user/profile">My Pledges</a></li>
+            <li><a href="<?php echo APP_URL?>/user/projects">My Projects</a></li>
+            <li><a href="<?php echo APP_URL?>/user/pledges">My Pledges</a></li>
             <li><a href="<?php echo APP_URL?>/user/history">Browsing History</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="<?php echo APP_URL?>/user/logout">Logout</a></li>

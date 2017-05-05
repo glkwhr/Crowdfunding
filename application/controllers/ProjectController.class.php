@@ -45,12 +45,10 @@ class ProjectController extends Controller {
 		$data['minamount'] = $this->getInput($_POST['minamount']);
 		$data['maxamount'] = $this->getInput($_POST['maxamount']);
 		$data['endtime'] = $this->getInput($_POST['endtime']);
-		$data['plannedcompletiontime'] = $this->getInput($_POST['plannedcompletiontime']);
-		
+		$data['plannedcompletiontime'] = $this->getInput($_POST['plannedcompletiontime']);	
 		if (!empty($_POST['tag'])) {
 			$data['tag'] = $this->getInput($_POST['tag']);
 		}
-
 		return $data;
 	}
 }
