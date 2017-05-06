@@ -11,8 +11,15 @@
 
 <?php case 'create': ?>
 <!-- Show registration form -->
-<form class="center-block jumbotron" style="max-width: 700px;" action="<?php echo APP_URL ?>/project/create" method="post">
+<form class="center-block jumbotron" enctype="multipart/form-data" style="max-width: 700px;" action="<?php echo APP_URL ?>/project/create" method="post">
   <h2><?php echo $title ?></h2>
+  
+  <div class="form-group">
+    <label class="control-label">Profile Photo</label>
+    <input type="file" name="profpic">
+    <span class="help-block">*.jpg, *.jpge, *.png (less than 100KB)</span>
+  </div>
+  
   <div class="form-group <?php if (isset($pnameError)) { echo 'has-error'; }?>">
 	<label class="control-label">Project Title</label>
 	<input class="form-control" type="text" name="pname" required="required" placeholder="Title">
