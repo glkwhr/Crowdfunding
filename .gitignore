@@ -3,3 +3,4 @@ assets/img/project/
 .buildpath
 .project
 .settings
+*.txt
