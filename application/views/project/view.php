@@ -27,7 +27,7 @@ p {
         <h1><?php echo $row['pname'];?></h1>
       </div>
       <div class="row" id="uname">
-        <p class="text-muted">By <?php echo $row['uname'];?></p>
+        <p class="text-muted">By <?php echo $row['uname'] . " on " . date('Y-m-d', strtotime($row['posttime']));?></p>
         
         <?php if (!empty($row['tag'])):?>
         <?php foreach (explode(",", $row['tag']) as $tag):?>
@@ -65,15 +65,24 @@ p {
         }
         ?>
           <div class="progress-bar progress-bar-<?php if (isset($failed)) { echo "danger"; } else { echo "success"; }?>" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progress; ?>%">
-          
           </div>
-          <span><?php echo $msg; ?></span>
         </div>
       </div>
       
       <div class="row">
+      <?php if ($row['status']=='crowdfunding'):?>
         <h2 class="text-success">$<?php echo $row['curamount'];?></h2>
-        <p class="text-muted">pledged of $<?php echo $row['minamount'];?></p>
+        <p class="text-muted">pledged of $<?php echo $row['minamount'];?> goal</p>
+      <?php elseif ($row['status']=='progressing'):?>
+        <h2 class="text-success"><?php echo $row['progress'];?>%</h2>
+        <p class="text-muted">of the project is completed</p>
+      <?php elseif ($row['status']=='completed'):?>
+        <h2 class="text-success">Completed</h2>
+        <p class="text-muted">this project is completed on <?php echo date('Y-m-d', strtotime($row['actualcompletiontime']));?></p>
+      <?php elseif ($row['status']=='failed'):?>
+        <h2 class="text-danger">Failed</h2>
+        <p class="text-muted">this project failed</p>
+      <?php endif;?>
       </div>
       <div class="row">
         <h2 class="text-primary"><?php echo date('Y-m-d',strtotime($row['endtime']));?></h2>
@@ -87,8 +96,17 @@ p {
         <p class="text-muted" style="font-size: 12px; padding-top: 20px;">This project will only be funded if it reaches its goal by <?php echo date('Y-m-d',strtotime($row['endtime']));?></p>
       </div>
       <div class="row">
+<?php switch ($row['status']):?>
+<?php case 'crowdfunding': ?>
         <h2><a href="#" class="btn btn-lg btn-success btn-block" role="button">Back this project</a></h2>
-        <a href="#" class="btn btn-lg btn-info btn-block" role="button">Like this project</a>
+<?php break;?>
+<?php case 'progressing': ?>
+        <h2><a href="#" class="btn btn-lg btn-success btn-block disabled" role="button">Back this project</a></h2>
+<?php break;?>
+<?php case 'completed':?>
+        <h2><a href="#" class="btn btn-lg btn-warning btn-block" role="button">Rate this project</a></h2>
+<?php endswitch;?>
+        <a href="#" class="btn btn-lg btn-primary btn-block" role="button">Like this project</a>
       </div>
       
     </div>
