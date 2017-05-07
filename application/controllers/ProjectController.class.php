@@ -1,13 +1,13 @@
 <?php
 class ProjectController extends Controller {
 
-	function search() {
+	function search($type = 'all') {
 		$projectModel = new ProjectModel();
-		$keyword = '';
+		$keyword="";
 		if (isset($_POST['keyword'])) {
 			$keyword = $this->getInput($_POST['keyword']);
 		}
-		$this->assign('result', $projectModel->selectKeyword($keyword));
+		$this->assign('result', $projectModel->selectKeyword($keyword, $type));
 		$this->render();
 	}
 
@@ -72,7 +72,32 @@ class ProjectController extends Controller {
 			header("location:" . APP_URL . "/project/edit");
 		}
 	}
-
+	
+	function view($pid) {
+		// mode: guest, user, owner
+		$projectModel = new ProjectModel();
+		$mode = 'guest';
+		if (empty($row = $projectModel->select($pid))) {
+			// project doesn't exist
+			$mode = 'notfound';
+		} else {
+			$this->assign('row', $row);
+			if ((new UserModel())->checkLogin()) {
+				// user or owner
+				if (session_status() == PHP_SESSION_NONE) {
+					session_start();
+				}
+				if ($row['uname'] == $_SESSION['user']['username']) {
+					$mode = 'owner';
+				} else {
+					$mode = 'user';
+				}
+			}
+		}
+		$this->assign('mode', $mode);
+		$this->render();
+	}
+	
 	function getData() {
 		$data['pname'] = $this->getInput($_POST['pname']);
 		$data['description'] = $this->getInput($_POST['description']);
