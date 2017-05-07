@@ -14,10 +14,13 @@
 <form class="center-block jumbotron" enctype="multipart/form-data" style="max-width: 700px;" action="<?php echo APP_URL ?>/project/create" method="post">
   <h2><?php echo $title ?></h2>
   
-  <div class="form-group">
+  <div class="form-group <?php if (isset($profpicError)) { echo 'has-error'; }?>">
     <label class="control-label">Profile Photo</label>
     <input type="file" name="profpic">
-    <span class="help-block">*.jpg, *.jpge, *.png (less than 100KB)</span>
+    <span class="help-block">*.jpg, *.gif, *.png (less than 1MB)</span>
+    <?php if (isset($profpicError)): ?>
+	<span class="help-block"><?php echo $profpicError?></span>
+	<?php endif?>
   </div>
   
   <div class="form-group <?php if (isset($pnameError)) { echo 'has-error'; }?>">
@@ -33,6 +36,14 @@
 	<textarea class="form-control" style="resize: vertical;" rows="3" name="description" required="required" placeholder="Description"></textarea>
 	<?php if (isset($desError)): ?>
 	<span class="help-block"><?php echo $desError?></span>
+	<?php endif?>
+  </div>
+  
+  <div class="form-group <?php if (isset($tagError)) { echo 'has-error'; }?>">
+	<label class="control-label">Tag</label>
+	<input class="form-control" type="text" name="tag" placeholder="tag1,tag2,tag3..."></input>
+	<?php if (isset($tagError)): ?>
+	<span class="help-block"><?php echo $tagError?></span>
 	<?php endif?>
   </div>
 
