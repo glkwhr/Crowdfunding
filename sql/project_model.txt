@@ -1,0 +1,35 @@
+`pid` INT NOT NULL,
+`pname`  VARCHAR(40) NULL,
+`uname`  VARCHAR(40) NULL,
+`description`  VARCHAR(40) NULL,
+`profpic` VARCHAR(40) NULL, # filename of the profile picture
+`tag`   VARCHAR(40) NULL,
+`minamount` INT NULL,
+`maxamount` INT NULL,
+`curamount` INT NULL,
+`posttime`  DATETIME NULL,
+`status`   VARCHAR(40) NULL,
+`endtime`  DATETIME NULL,
+`actualendtime`  DATETIME NULL,
+`plannedcompletiontime`  DATETIME NULL,
+`actualcompletiontime`  DATETIME NULL,
+`progress`  INT NULL,
+
+constraints:
+pid: create by database
+pname: empty 
+uname: empty/valid
+description: /
+profpic: /
+tag: /
+minamount :empty/number
+maxamout:empty/number
+curamout: number
+posttime: empty?
+status : empty?
+endtime: empty?
+actualendtime: /
+plannedcompletiontime: /
+actualcompletiontime:  
+progress: / 
+
