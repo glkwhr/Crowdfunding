@@ -1,12 +1,16 @@
 <?php
 class ProjectModel extends Model {
 
-	function selectKeyword($keyword) {
+	function selectKeyword($keyword, $type='all') {
 		if (!empty($keyword)) {
 			$keyword = '%' . $keyword . '%';
-			$conds['pname'] = $keyword;
-			$conds['description'] = $keyword;
-			$conds['tag'] = $keyword;
+			if ($type == 'all') {
+				$conds['pname'] = $keyword;
+				$conds['description'] = $keyword;
+				$conds['tag'] = $keyword;
+			} else {
+				$conds[$type] = $keyword;
+			}
 			$this->where($this->getFilter($conds, Sql::OP_LIKE, Sql::LOGIC_OR));
 		}
 		return $this->selectAll();
@@ -23,7 +27,7 @@ class ProjectModel extends Model {
 		$data['uname'] = $_SESSION['user']['username'];
 		$data['curamount'] = 0;
 		$data['posttime'] = date("Y-m-d");
-		$data['status'] = "Crowdfunding";
+		$data['status'] = "crowdfunding";
 		return parent::add($data);
 	}
 
