@@ -1,6 +1,6 @@
 <?php
 class ProjectController extends Controller {
-	
+
 	function search() {
 		$projectModel = new ProjectModel();
 		$keyword = '';
@@ -10,7 +10,7 @@ class ProjectController extends Controller {
 		$this->assign('result', $projectModel->selectKeyword($keyword));
 		$this->render();
 	}
-	
+
 	function create() {
 		if (!(new UserModel())->checkLogin()) {
 			// create page can only be accessed by users
@@ -38,14 +38,59 @@ class ProjectController extends Controller {
 		$this->assign('title', 'New Project');
 		$this->render();
 	}
-	
+
+	function edit($pid) {
+		$userModel = new UserModel();
+		$projectModel = new ProjectModel();
+		if ($userModel->checkLogin()) {
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				$data = $this->getData();
+				$res = array();
+				if ($res = $projectModel->isNewInvalid($pid,$data)) {
+					$this->assign('errors', $res);
+					$this->assign('mode', 'failed');
+				} else {
+					if ($projectModel->update($pid, $data)) {
+						// successfully updated
+						$this->assign('mode', 'succeeded');
+					} else {
+						// failed to update
+						$this->assign('mode', 'failed');
+					}
+				}
+			} else {
+				$this->assign('mode', 'edit');
+			}
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$olddata = $projectModel->select($pid);
+			$this->assign('data', $olddata);
+			$this->assign('title', 'Project Edit');
+			$this->render();
+		} else {
+			header("location:" . APP_URL . "/project/edit");
+		}
+	}
+
 	function getData() {
 		$data['pname'] = $this->getInput($_POST['pname']);
 		$data['description'] = $this->getInput($_POST['description']);
-		$data['minamount'] = $this->getInput($_POST['minamount']);
-		$data['maxamount'] = $this->getInput($_POST['maxamount']);
-		$data['endtime'] = $this->getInput($_POST['endtime']);
-		$data['plannedcompletiontime'] = $this->getInput($_POST['plannedcompletiontime']);
+		if (isset($_POST['minamount'])) {
+			$data['minamount'] = $this->getInput($_POST['minamount']);
+		}
+		if (isset($_POST['maxamount'])) {
+			$data['maxamount'] = $this->getInput($_POST['maxamount']);
+		}
+		if (isset($_POST['endtime'])) {
+			$data['endtime'] = $this->getInput($_POST['endtime']);
+		}
+		if (isset($_POST['plannedcompletiontime'])) {
+			$data['plannedcompletiontime'] = $this->getInput($_POST['plannedcompletiontime']);
+		}
+		if (isset($_POST['progress']) && !empty($_POST['progress'])) {
+			$data['progress'] = $this->getInput($_POST['progress']);
+		}
 		if (!empty($_FILES['profpic']['tmp_name'])) {
 			$data['profpic'] = $_FILES['profpic'];
 		}
