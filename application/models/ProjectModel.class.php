@@ -41,6 +41,15 @@ class ProjectModel extends Model {
 		if (isset($data['profpic'])) {
 			$data['profpic'] = $this->acceptFile($data['profpic']);
 		}
+		if (isset($data['sample'])) {
+			$dst = SAMPLE_PROJ_PATH . $pid . "/";
+			if (!is_dir($dst)) {
+				mkdir($dst, 0777, true);
+			}
+			move_uploaded_file($data['sample']["tmp_name"], $dst . $data['sample']['name']);
+			(new SampleModel())->add(array('pid'=>$pid, 'filename'=>$data['sample']['name'], 'uploadtime'=>date("Y-m-d h:m:s")));
+			unset($data['sample']);
+		}
 		return parent::update($pid,$data);
 	}
 

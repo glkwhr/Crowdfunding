@@ -46,6 +46,15 @@
 	<span class="help-block"><?php echo $tagError?></span>
 	<?php endif?>
   </div>
+  
+  <div class="form-group <?php if (isset($sampleError)) { echo 'has-error'; }?>" >
+    <label class="control-label">Add Sample</label>
+    <input type="file" name="sample">
+    <span class="help-block"> less than 2MB </span>
+    <?php if (isset($sampleError)): ?>
+    <span class="help-block"><?php echo $sampleError?></span>
+    <?php endif?>
+  </div>
 
 <?php if (!isset($progress)):?>
   <div class="form-group <?php if (isset($progressError)) { echo 'has-error'; }?>">

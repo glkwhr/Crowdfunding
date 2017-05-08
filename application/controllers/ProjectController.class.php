@@ -120,6 +120,15 @@ class ProjectController extends Controller {
 		}
 	}
 	
+	function deleteSample($data) {
+		$data = explode(' ', $data);
+		if (!unlink(SAMPLE_PROJ_PATH . $data[0] . "/" . $data[1])) {
+			
+		}
+		(new SampleModel())->delete($data);
+		header("location:" . APP_URL . "/project/view/" . $data[0]);
+	}
+	
 	function view($pid) {
 		if (empty($pid)) {
 			header("location:" . APP_URL . "/project/search");
@@ -143,14 +152,21 @@ class ProjectController extends Controller {
 					$mode = 'user';
 				}
 			}
-			
+			$likeModel = new LikeModel();
+			$this->assign('likeCount', $likeModel->countLiked($pid));
 			if ((new UserModel())->checkLogin()) {
 				if (session_status() == PHP_SESSION_NONE) {
 					session_start();
-				}
-				$likeModel = new LikeModel();
+				}				
 				$this->assign('hasLiked', $likeModel->hasLiked($_SESSION['user']['username'], $pid));
-				$this->assign('likeCount', $likeModel->countLiked($pid));
+			}
+			
+			// get samples
+			if (!empty($samples = (new SampleModel())->getSample($pid))) {
+				$this->assign('hasSample', true);
+				$this->assign('samples', $samples);
+			} else {
+				$this->assign('hasSample', false);
 			}
 			
 			// get comments
@@ -245,6 +261,9 @@ class ProjectController extends Controller {
 		}
 		if (!empty($_FILES['profpic']['tmp_name'])) {
 			$data['profpic'] = $_FILES['profpic'];
+		}
+		if (!empty($_FILES['sample']['tmp_name'])) {
+			$data['sample'] = $_FILES['sample'];
 		}
 		if (!empty($_POST['tag'])) {
 			$data['tag'] = $this->getInput($_POST['tag']);

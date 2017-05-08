@@ -148,6 +148,24 @@ case 'notfound'
     <p><?php echo $row['description'];?></p>
   </div>
   
+  <div class="row" id="sample">
+    <div class="page-header">
+      <h2>Sample</h2>
+    </div>
+      <?php if (isset($samples)):?>
+      <?php foreach ($samples as $sample):?>
+        <h4 class="col-md-12"><strong><a href="<?php echo APP_URL . SAMPLE_PROJ_URL . "sample/" . $row['pid'] . "/" . $sample['filename'];?>"><?php echo $sample['filename'];?></a></strong>
+        <span class="help-block" style="font-size:14px"><?php echo $sample['uploadtime'];?>
+        <?php if ($mode == 'owner'):?>
+        <a href="<?php echo APP_URL . "/project/deleteSample/" . $row['pid'] . "+" . $sample['filename'];?>">delete</a>
+        <?php endif;?>
+        </span></h4>
+      <?php endforeach;?>
+      <?php else:?>
+        <p class="text-center">No sample yet
+      <?php endif;?>
+  </div>
+  
   <div class="row" id="comment">
     <div class="page-header">
       <h2>Comment</h2>
@@ -159,10 +177,8 @@ case 'notfound'
 	    <button type="submit" role="button" class="btn btn-default btn-lg">Post</button>
 	    <button type="reset" role="button" class="btn btn-default btn-lg">Cancel</button>
 	  </div>
-    </form>
-    
-  </div>
-  
+    </form>    
+  </div>  
   <div class="row" style="padding-top:20px">
       <?php if (isset($comments)):?>
       <?php foreach ($comments as $comment):?>
@@ -176,7 +192,7 @@ case 'notfound'
       <?php else:?>
         <p class="text-center">No comment yet
       <?php endif;?>
-    </div>
+   </div>
   
 </div>
 <?php endswitch;?>
