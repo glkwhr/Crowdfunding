@@ -134,6 +134,28 @@ class UserController extends Controller {
 		}
 	}
 	
+	function view($uname) {
+		if (empty($uname) || empty($row = (new UserModel())->select($uname))) {
+			header("location:" . APP_URL);
+		}
+		$guest = "";
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$guest = $_SESSION['user']['username'];
+		}
+		if (empty($guest)) {
+			$this->assign('mode', 'guest');
+		} else if ($guest == $row['uname']) {
+			header("location:" . APP_URL . "/user/profile");
+		} else {
+			$this->assign('mode', 'user');
+		}
+		$this->assign('row', $row);
+		$this->render();
+	}
+	
 	function history() {
 		
 	}
