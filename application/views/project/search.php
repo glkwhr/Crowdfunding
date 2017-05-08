@@ -15,7 +15,13 @@
       <div class="caption">
         <h3><?php echo $row['pname'] ?></h3>
         <p>by <a href="<?php echo APP_URL . "/user/view/" . $row['uname'];?>"><?php echo $row['uname'];?></a></p>
-        <p><a href="<?php echo APP_URL . "/project/view/" . $row['pid']?>" class="btn btn-primary" role="button">View</a> <a href="#" class="btn btn-success" role="button">Like</a></p>
+        <p><a href="<?php echo APP_URL . "/project/view/" . $row['pid']?>" class="btn btn-primary" role="button">View</a> 
+        <?php if (isset($likeModel) && $likeModel->hasLiked($user, $row['pid'])):?>
+        <a href="<?php echo APP_URL?>/project/unlike/<?php echo $row['pid']?>" class="btn btn-md btn-default active" role="button">Liked</a>
+        <?php else:?>
+        <a href="<?php echo APP_URL?>/project/like/<?php echo $row['pid']?>" class="btn btn-md btn-success" role="button">Like</a>
+        <?php endif;?>
+        </p>
       </div>
     </div>
   </div>

@@ -122,10 +122,20 @@ case 'notfound'
         <h2><a href="#" class="btn btn-lg btn-warning btn-block" role="button">Rate this project</a></h2>
 <?php endswitch;?>
 <?php if ($mode == 'user'):?>
-		<a href="#" class="btn btn-lg btn-info btn-block" role="button">Like this project</a>
+	<?php if (isset($hasLiked) && $hasLiked):?>
+		<a href="<?php echo APP_URL?>/project/unlike/<?php echo $row['pid']?>" class="btn btn-lg btn-default btn-block active" role="button">Liked</a>
+	<?php else: ?>
+	    <a href="<?php echo APP_URL?>/project/like/<?php echo $row['pid']?>" class="btn btn-lg btn-info btn-block" role="button">Like this project</a>
+	<?php endif;?>
 <?php elseif ($mode == 'owner'):?>
         <a href="<?php echo APP_URL . "/project/edit/" . $row['pid'];?>" class="btn btn-lg btn-default btn-block" role="button">Edit this project</a>
+        <?php if (isset($hasLiked) && $hasLiked):?>
+		<a href="<?php echo APP_URL?>/project/unlike/<?php echo $row['pid']?>" class="btn btn-lg btn-default btn-block active" role="button">Liked</a>
+	    <?php else: ?>
+	    <a href="<?php echo APP_URL?>/project/like/<?php echo $row['pid']?>" class="btn btn-lg btn-info btn-block" role="button">Like this project</a>
+	    <?php endif;?> 
 <?php endif;?>
+		<p class="text-muted" style="font-size: 12px; padding-top: 20px;"><?php echo $likeCount;?> people likes this project</p>
       </div>
       
     </div>
@@ -157,7 +167,7 @@ case 'notfound'
       <?php if (isset($comments)):?>
       <?php foreach ($comments as $comment):?>
         <div class="row comment">
-        <h4 class="col-md-2"><strong><?php echo $comment['uname'];?></strong>
+        <h4 class="col-md-2"><strong><a href="<?php echo APP_URL . "/user/view/" . $comment['uname'];?>"><?php echo $comment['uname'];?></a></strong>
         <span class="help-block" style="font-size:14px"><?php echo $comment['time'];?></span></h4>
         
         <p class="col-md-10" style="font-size:14px;padding-top: 9px;"><?php echo $comment['content'];?></p>

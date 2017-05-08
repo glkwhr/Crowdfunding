@@ -8,12 +8,30 @@ class ProjectController extends Controller {
 			$keyword = $this->getInput($_POST['keyword']);
 		}
 		$this->assign('result', $projectModel->selectKeyword($keyword, $type));
+		
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$this->assign('user', $_SESSION['user']['username']);
+			$this->assign('likeModel', new LikeModel());
+		}
+		
 		$this->render();
 	}
 	
 	function user($uname="") {
 		$projectModel = new ProjectModel();
 		$this->assign('result', $projectModel->selectKeyword($uname, 'user'));
+		
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$this->assign('user', $_SESSION['user']['username']);
+			$this->assign('likeModel', new LikeModel());
+		}
+		
 		$this->render();
 	}
 	
@@ -126,6 +144,15 @@ class ProjectController extends Controller {
 				}
 			}
 			
+			if ((new UserModel())->checkLogin()) {
+				if (session_status() == PHP_SESSION_NONE) {
+					session_start();
+				}
+				$likeModel = new LikeModel();
+				$this->assign('hasLiked', $likeModel->hasLiked($_SESSION['user']['username'], $pid));
+				$this->assign('likeCount', $likeModel->countLiked($pid));
+			}
+			
 			// get comments
 			if (!empty($comments = (new CommentModel())->getComment($pid))) {
 				$this->assign('hasComment', true);
@@ -135,6 +162,66 @@ class ProjectController extends Controller {
 			}
 		}
 		$this->assign('mode', $mode);
+		$this->render();
+	}
+	
+	function like($pid) {
+		if (empty($pid) || empty($row = (new ProjectModel())->select($pid, array('pid', 'pname', 'uname')))) {
+			header("location:" . APP_URL);
+		}
+		$guest = "";
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$guest = $_SESSION['user']['username'];
+		}
+		if (empty($guest)) {
+			header("location:" . APP_URL . "/user/login");
+		} else {
+			$likeModel = new LikeModel();
+			$this->assign('pid', $row['pid']);
+			$this->assign('pname', $row['pname']);
+			if ($likeModel->hasLiked($guest, $pid)) {
+				$this->assign('mode', 'liked');
+			} else {
+				if ($likeModel->add(array('uname'=>$guest, 'pid'=>$pid))) {
+					$this->assign('mode', 'succeeded');
+				} else {
+					$this->assign('mode', 'failed');
+				}
+			}
+		}
+		$this->render();
+	}
+	
+	function unlike($pid) {
+		if (empty($pid) || empty($row = (new ProjectModel())->select($pid, array('pid', 'pname', 'uname')))) {
+			header("location:" . APP_URL);
+		}
+		$guest = "";
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$guest = $_SESSION['user']['username'];
+		}
+		if (empty($guest)) {
+			header("location:" . APP_URL . "/user/login");
+		} else {
+			$likeModel = new LikeModel();
+			$this->assign('pid', $row['pid']);
+			$this->assign('pname', $row['pname']);
+			if (!$likeModel->hasLiked($guest, $pid)) {
+				$this->assign('mode', 'notliked');
+			} else {
+				if ($likeModel->delete(array('uname'=>$guest, 'pid'=>$pid))) {
+					$this->assign('mode', 'succeeded');
+				} else {
+					$this->assign('mode', 'failed');
+				}
+			}
+		}
 		$this->render();
 	}
 	
