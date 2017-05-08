@@ -26,7 +26,11 @@
     <div class="row">
       <h2 class="col-md-12 text-center">
         <?php if ($mode == "user"):?>
-        <a href="#" class="btn btn-md btn-success" role="button">Follow</a>
+        <?php if ($hasFollowed):?>
+        <a href="<?php echo APP_URL?>/user/unfollow/<?php echo $row['uname']?>" class="btn btn-md btn-danger" role="button">Unfollow</a>
+        <?php else:?>
+        <a href="<?php echo APP_URL?>/user/follow/<?php echo $row['uname']?>" class="btn btn-md btn-success" role="button">Follow</a>
+        <?php endif;?>
         <?php endif;?>
         <a href="<?php echo APP_URL?>/project/user/<?php echo $row['uname']?>" class="btn btn-md btn-success" role="button">Projects</a>
       </h2>

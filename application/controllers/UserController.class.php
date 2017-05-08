@@ -150,9 +150,72 @@ class UserController extends Controller {
 		} else if ($guest == $row['uname']) {
 			header("location:" . APP_URL . "/user/profile");
 		} else {
+			$this->assign('hasFollowed', (new FollowModel())->hasFollowed($guest, $row['uname']));
 			$this->assign('mode', 'user');
 		}
 		$this->assign('row', $row);
+		$this->render();
+	}
+	
+	function follow($uname) {
+		if (empty($uname) || empty($row = (new UserModel())->select($uname, array('uname')))) {
+			header("location:" . APP_URL);
+		}
+		$guest = "";
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$guest = $_SESSION['user']['username'];
+		}
+		if (empty($guest)) {
+			header("location:" . APP_URL . "/user/login");
+		} else if ($guest == $row['uname']) {
+			header("location:" . APP_URL . "/user/profile");
+		} else {			
+			$followModel = new FollowModel();
+			$this->assign('uname2', $row['uname']);
+			if ($followModel->hasFollowed($guest, $row['uname'])) {
+				$this->assign('mode', 'followed');
+			} else {
+				if ($followModel->add(array('uname1'=>$guest, 'uname2'=>$row['uname']))) {
+					$this->assign('mode', 'succeeded');
+				} else {
+					$this->assign('mode', 'failed');
+				}			
+			}
+		}
+		$this->render();
+	}
+	
+	function unfollow($uname) {
+		if (empty($uname) || empty($row = (new UserModel())->select($uname, array('uname')))) {
+			header("location:" . APP_URL);
+		}
+		$guest = "";
+		if ((new UserModel())->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$guest = $_SESSION['user']['username'];
+		}
+		if (empty($guest)) {
+			header("location:" . APP_URL . "/user/login");
+		} else if ($guest == $row['uname']) {
+			header("location:" . APP_URL . "/user/profile");
+		} else {
+			$followModel = new FollowModel();
+			$this->assign('uname2', $row['uname']);
+			if (!$followModel->hasFollowed($guest, $row['uname'])) {
+				$this->assign('mode', 'notfollowed');
+			} else {
+				if ($followModel->delete(array('uname1'=>$guest, 'uname2'=>$row['uname']))) {
+					$this->assign('mode', 'succeeded');
+				} else {
+					$this->assign('mode', 'failed');
+				}
+			}
+		}
 		$this->render();
 	}
 	
