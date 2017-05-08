@@ -41,9 +41,9 @@ CREATE TABLE `Project` (
 
 CREATE TABLE `Sample` (
 	`pid`  INT NOT NULL,
-	`dir`  VARCHAR(40) NOT NULL,
+	`filename`  VARCHAR(40) NOT NULL,
 	`uploadtime`  DATETIME NULL,
-	PRIMARY KEY (`dir`),
+	PRIMARY KEY (`filename`),
 	FOREIGN KEY (`pid`) REFERENCES `project`(`pid`)
 );
 
@@ -61,6 +61,7 @@ CREATE TABLE `Pledge` (
 CREATE TABLE `Like` (
 	`uname` VARCHAR(40) NOT NULL,
 	`pid`  INT NOT NULL,
+    `time`  DATETIME NOT NULL,
 	PRIMARY KEY (`pid`,`uname`),
 	FOREIGN KEY (`pid`) REFERENCES `project`(`pid`),
     FOREIGN KEY (`uname`) REFERENCES `user`(`uname`)
@@ -89,6 +90,7 @@ CREATE TABLE `Rate` (
 CREATE TABLE `Follow` (
 	`uname1` VARCHAR(40) NOT NULL,
 	`uname2` VARCHAR(40) NOT NULL,
+    `time` DATETIME NOT NULL,
 	PRIMARY KEY (`uname1`,`uname2`),
     FOREIGN KEY (`uname1`) REFERENCES `user`(`uname`),
     FOREIGN KEY (`uname2`) REFERENCES `user`(`uname`)
