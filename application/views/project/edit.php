@@ -47,6 +47,7 @@
 	<?php endif?>
   </div>
 
+<?php if (!isset($progress)):?>
   <div class="form-group <?php if (isset($progressError)) { echo 'has-error'; }?>">
 	<label class="control-label">Progress</label>
 	<input class="form-control" type="range" min="0" max="100" name="progress" required="required" value = "<?php echo $progress;?>" placeholder="Progress">
@@ -54,9 +55,11 @@
 	<span class="help-block"><?php echo $progressError?></span>
 	<?php endif?>
   </div>
+<?php endif;?>
 
   <div class="form-group">
     <button type="submit" role="button" class="btn btn-default btn-lg">Update</button>
+    <a href="<?php echo APP_URL . "/project/view/" . $pid;?>" class="btn btn-lg btn-default" role="button">Return</a>
   </div>
 </form>
 </div>

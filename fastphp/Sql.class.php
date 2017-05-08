@@ -145,7 +145,7 @@ class Sql {
 		$values = array();
 		foreach ($data as $key => $value) {
 			$fields[] = sprintf("`%s`", $key);
-			$values[] = empty($value) ? "null" : sprintf("'%s'", $value);
+			$values[] = (empty($value) && $value!='0') ? "null" : sprintf("'%s'", $value);
 		}
 
 		$field = implode(',', $fields);
