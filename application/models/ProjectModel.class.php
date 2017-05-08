@@ -4,12 +4,18 @@ class ProjectModel extends Model {
 	function selectKeyword($keyword, $type='all') {
 		if (!empty($keyword)) {
 			$keyword = '%' . $keyword . '%';
-			if ($type == 'all') {
-				$conds['pname'] = $keyword;
-				$conds['description'] = $keyword;
-				$conds['tag'] = $keyword;
-			} else {
-				$conds[$type] = $keyword;
+			switch ($type) {
+				case 'all':
+					$conds['pname'] = $keyword;
+					$conds['description'] = $keyword;
+					$conds['tag'] = $keyword;
+					break;
+				case 'tag':
+					$conds['tag'] = $keyword;
+					break;
+				case 'user':
+					$conds['uname'] = $keyword;
+					break;
 			}
 			$this->where($this->getFilter($conds, Sql::OP_LIKE, Sql::LOGIC_OR));
 		}
@@ -265,8 +271,6 @@ class ProjectModel extends Model {
 		}
 		return $errors;
 	}
-
-
 
 	private function acceptFile($file) {
 		$uptype = explode(".", $file["name"]);

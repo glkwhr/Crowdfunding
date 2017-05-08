@@ -10,7 +10,36 @@ class ProjectController extends Controller {
 		$this->assign('result', $projectModel->selectKeyword($keyword, $type));
 		$this->render();
 	}
-
+	
+	function user($uname="") {
+		$projectModel = new ProjectModel();
+		$this->assign('result', $projectModel->selectKeyword($uname, 'user'));
+		$this->render();
+	}
+	
+	function comment($pid="") {
+		if (empty($pid)) {
+			header("location:" . APP_URL . "/project/search");
+		}
+		if (!(new UserModel())->checkLogin()) {
+			header("location:" . APP_URL . "/user/login");
+		} else {
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				if (session_status() == PHP_SESSION_NONE) {
+					session_start();
+				}
+				$data['uname'] = $this->getInput($_SESSION['user']['username']);
+				$data['pid'] = $this->getInput($pid);
+				$data['content'] = $this->getInput($_POST['comment']);
+				$commentModel = new CommentModel();
+				if (!$commentModel->isInvalid($data)) {
+					$commentModel->add($data);
+				}
+			}
+			header("location:" . APP_URL . "/project/view/" . $pid);
+		}
+	}
+	
 	function create() {
 		if (!(new UserModel())->checkLogin()) {
 			// create page can only be accessed by users
@@ -69,11 +98,14 @@ class ProjectController extends Controller {
 			$this->assign('title', 'Project Edit');
 			$this->render();
 		} else {
-			header("location:" . APP_URL . "/project/edit");
+			header("location:" . APP_URL . "/user/login");
 		}
 	}
 	
 	function view($pid) {
+		if (empty($pid)) {
+			header("location:" . APP_URL . "/project/search");
+		}
 		// mode: guest, user, owner
 		$projectModel = new ProjectModel();
 		$mode = 'guest';
@@ -92,6 +124,14 @@ class ProjectController extends Controller {
 				} else {
 					$mode = 'user';
 				}
+			}
+			
+			// get comments
+			if (!empty($comments = (new CommentModel())->getComment($pid))) {
+				$this->assign('hasComment', true);
+				$this->assign('comments', $comments);
+			} else {
+				$this->assign('hasComment', false);
 			}
 		}
 		$this->assign('mode', $mode);
