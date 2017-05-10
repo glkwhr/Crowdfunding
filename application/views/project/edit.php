@@ -56,7 +56,7 @@
     <?php endif?>
   </div>
 
-<?php if (!isset($progress)):?>
+<?php if (isset($progress)):?>
   <div class="form-group <?php if (isset($progressError)) { echo 'has-error'; }?>">
 	<label class="control-label">Progress</label>
 	<input class="form-control" type="range" min="0" max="100" name="progress" required="required" value = "<?php echo $progress;?>" placeholder="Progress">
