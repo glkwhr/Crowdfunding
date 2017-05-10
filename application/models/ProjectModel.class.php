@@ -41,6 +41,12 @@ class ProjectModel extends Model {
 		if (isset($data['profpic'])) {
 			$data['profpic'] = $this->acceptFile($data['profpic']);
 		}
+		if (isset($data['progress'])) {
+			if ($data['progress'] == '100') {
+				$data['status'] = 'completed';
+				$data['actualcompletiontime'] = date('Y-m-d h-m-s');
+			}
+		}
 		if (isset($data['sample'])) {
 			$dst = SAMPLE_PROJ_PATH . $pid . "/";
 			if (!is_dir($dst)) {

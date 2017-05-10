@@ -98,6 +98,8 @@ case 'notfound'
         <h2 class="text-danger">Failed</h2>
         <p class="text-muted">this project failed</p>
       <?php endif;?>
+        <h2 class="text-info"><?php echo $backerCount;?></h2>
+        <p class="text-muted">backers</p>
       </div>
       <div class="row">
         <h2 class="text-primary"><?php echo date('Y-m-d',strtotime($row['endtime']));?></h2>
@@ -108,12 +110,25 @@ case 'notfound'
         <p class="text-muted">planned completion deadline</p>
       </div>
       <div class="row">
-        <p class="text-muted" style="font-size: 12px; padding-top: 20px;">This project will only be funded if it reaches its goal by <?php echo date('Y-m-d',strtotime($row['endtime']));?></p>
+        <p class="text-muted" style="font-size: 12px; padding-top: 15px; padding-bottom: 10px;">This project will only be funded if it reaches its goal by <?php echo date('Y-m-d',strtotime($row['endtime']));?></p>
       </div>
       <div class="row">
 <?php switch ($row['status']):?>
 <?php case 'crowdfunding': ?>
-        <h2><a href="#" class="btn btn-lg btn-success btn-block" role="button">Back this project</a></h2>
+		<form class="form-inline" action="<?php echo APP_URL ?>/project/pledge" method="post">
+		  <div style="width: 100%" class="form-group <?php if (isset($pledgeError)) { echo 'has-error'; }?>">
+		    <div style="width: 100%" class="input-group">
+		      <input type="hidden" name="pid" value="<?php echo $row['pid'];?>">
+		      <div class="input-group-addon">$</div>		      
+		      <input class="form-control input-lg" type="number" min="1" name="pledge" required="required" placeholder="Amount">
+		      <div class="input-group-addon">.00</div>
+		    </div>
+		    <?php if (isset($pledgeError)): ?>
+		    <span class="help-block"><?php echo $pledgeError?></span>
+		    <?php endif?>
+	  	  </div>
+          <h2><button type="submit" role="button" class="btn btn-success btn-lg btn-block">Back this project</button></h2>
+        </form>
 <?php break;?>
 <?php case 'progressing': ?>
         <h2><a href="#" class="btn btn-lg btn-success btn-block disabled" role="button">Back this project</a></h2>
@@ -135,7 +150,7 @@ case 'notfound'
 	    <a href="<?php echo APP_URL?>/project/like/<?php echo $row['pid']?>" class="btn btn-lg btn-info btn-block" role="button">Like this project</a>
 	    <?php endif;?> 
 <?php endif;?>
-		<p class="text-muted" style="font-size: 12px; padding-top: 20px;"><?php echo $likeCount;?> people likes this project</p>
+		<p class="text-muted" style="font-size: 12px; padding-top: 20px;"><?php echo $likeCount;?> people liked this project</p>
       </div>
       
     </div>

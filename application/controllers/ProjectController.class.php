@@ -58,6 +58,39 @@ class ProjectController extends Controller {
 		}
 	}
 	
+	function pledge() {
+		$userModel = new UserModel();
+		if ($userModel->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$data = $userModel->select($_SESSION['user']['username'], array('uname', 'ccn'));
+			if (empty($data['ccn'])) {
+				$this->assign('mode', 'noccn');
+			} else {
+			unset($data['ccn']);
+				if ($_SERVER["REQUEST_METHOD"] == "POST") {
+					if (isset($_POST['pid']) && isset($_POST['pledge'])) {
+						$data['pid'] = $_POST['pid'];
+						$data['amount'] = $_POST['pledge'];
+						$pledgeModel = new PledgeModel();
+						if ($pledgeModel->add($data)) {
+							$this->assign('data', $data);
+							$this->assign('mode', 'succeeded');
+						} else {
+							$this->assign('mode', 'failed');
+						}
+					} else {
+						$this->assign('mode', "failed");
+					}
+				}
+			}
+		} else {
+			header("location:" . APP_URL . "user/login");
+		}
+		$this->render();
+	}
+	
 	function create() {
 		if (!(new UserModel())->checkLogin()) {
 			// create page can only be accessed by users
@@ -108,9 +141,6 @@ class ProjectController extends Controller {
 			} else {
 				$this->assign('mode', 'edit');
 			}
-			if (session_status() == PHP_SESSION_NONE) {
-				session_start();
-			}
 			$olddata = $projectModel->select($pid);
 			$this->assign('data', $olddata);
 			$this->assign('title', 'Project Edit');
@@ -160,6 +190,9 @@ class ProjectController extends Controller {
 				}				
 				$this->assign('hasLiked', $likeModel->hasLiked($_SESSION['user']['username'], $pid));
 			}
+			
+			$pledgeModel = new PledgeModel();
+			$this->assign('backerCount', $pledgeModel->countBackers($pid));
 			
 			// get samples
 			if (!empty($samples = (new SampleModel())->getSample($pid))) {
