@@ -85,13 +85,13 @@ class UserModel extends Model {
 					break;
 				case 'ccn':
 					// TODO validate credit card number
-					if (!is_numeric($value)) {
+					if (!empty($value) && !is_numeric($value)) {
 						$errors['ccnError'] = "invalid credit card number";
 					}
 					break;
 				case 'email':
 					// TODO validate email address
-					if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+					if (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
 						$errors['emailError'] = "invalid email address";
 					}
 					break;
@@ -100,7 +100,7 @@ class UserModel extends Model {
 					break;
 				case 'interest':
 					// TODO validate interest
-					if (!preg_match("/^[a-zA-Z ]*(,[a-zA-Z ]*)*$/", $value)) {
+					if (!empty($value) && !preg_match("/^[a-zA-Z ]*(,[a-zA-Z ]*)*$/", $value)) {
 						$errors['interestError'] = "invalid interest(s)";
 					}
 			}

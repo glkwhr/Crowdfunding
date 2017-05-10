@@ -230,18 +230,10 @@ class UserController extends Controller {
 		if (isset($_POST['newpwd']) && !empty($_POST['newpwd'])) {
 			$data['newpwd'] = $this->getInput($_POST['newpwd']);
 		}
-		if (!empty($_POST['creditcardnum'])) {
-			$data['ccn'] = $this->getInput($_POST['creditcardnum']);
-		}
-		if (!empty($_POST['email'])) {
-			$data['email'] = $this->getInput($_POST['email']);
-		}
-		if (!empty($_POST['addr'])) {
-			$data['addr'] = $this->getInput($_POST['addr']);
-		}
-		if (!empty($_POST['interest'])) {
-			$data['interest'] = $this->getInput($_POST['interest']);
-		}
+		$data['ccn'] = $this->getInput($_POST['creditcardnum']);
+		$data['email'] = $this->getInput($_POST['email']);
+		$data['addr'] = $this->getInput($_POST['addr']);
+		$data['interest'] = $this->getInput($_POST['interest']);
 		return $data;
 	}
 }
