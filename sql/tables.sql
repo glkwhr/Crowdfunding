@@ -47,6 +47,7 @@ CREATE TABLE `Sample` (
 	FOREIGN KEY (`pid`) REFERENCES `project`(`pid`)
 );
 
+# one user can back the same project for multiple times
 CREATE TABLE `Pledge` (
 	`uname` VARCHAR(40) NOT NULL,
 	`pid`  INT NOT NULL,
@@ -95,3 +96,19 @@ CREATE TABLE `Follow` (
     FOREIGN KEY (`uname1`) REFERENCES `user`(`uname`),
     FOREIGN KEY (`uname2`) REFERENCES `user`(`uname`)
 );
+
+DROP TRIGGER IF EXISTS `trig_before_insert_pledge`;
+delimiter //
+CREATE TRIGGER `trig_before_insert_pledge` AFTER INSERT ON `pledge`
+FOR EACH ROW
+BEGIN
+    UPDATE `project` AS P
+        SET `curamount` = `curamount` + new.`amount`
+        WHERE P.`pid` = new.`pid`;
+    IF EXISTS (SELECT * FROM `project` AS P WHERE P.`pid` = new.`pid` AND `curamount` > `maxamount`) THEN
+        UPDATE `project` AS P
+            SET `status` = 'progressing', `actualendtime` = CURRENT_TIMESTAMP, `progress` = '0'
+            WHERE P.`pid` = new.`pid`;
+    END IF;
+END;//
+delimiter ;
