@@ -56,4 +56,28 @@ class FollowModel extends Model {
 		$sth->execute(array(':uname1' => $uname));
 		return $sth->fetchAll();
 	}
+	
+	function getFollowingLikes($uname) {
+		$sql = "select `uname`, `pid`, `pname`, `time`
+				from (select A.`uname`, A.`pid`, `pname`, `time` from `like` as A inner join `project` as B on A.`pid`=B.`pid`) as C
+				inner join
+				(select `uname2` from `follow` where `uname1`=:uname1) as D
+				on C.`uname`=D.`uname2`
+				order by `time` desc;";
+		$sth = $this->_dbHandle->prepare($sql);
+		$sth->execute(array(':uname1' => $uname));
+		return $sth->fetchAll();
+	}
+	
+	function getFollowingComments($uname) {
+		$sql = "select `uname`, `pid`, `pname`, `content`, `time`
+				from (select A.`uname`, A.`pid`, `pname`, `content`, `time` from `comment` as A inner join `project` as B on A.`pid`=B.`pid`) as C
+				inner join
+				(select `uname2` from `follow` where `uname1`=:uname1) as D
+				on C.`uname`=D.`uname2`
+				order by `time` desc;";
+		$sth = $this->_dbHandle->prepare($sql);
+		$sth->execute(array(':uname1' => $uname));
+		return $sth->fetchAll();
+	}
 }

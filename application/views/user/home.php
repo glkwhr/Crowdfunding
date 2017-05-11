@@ -21,7 +21,52 @@
         </div>
       <?php endforeach;?>
       <?php else:?>
-        <p class="text-center">None of those you are following funded any project yet.
+        <p class="text-center">None of those you are following posted any project yet.
+      <?php endif;?>
+  </div>
+  
+  <div class="row">
+    <div class="page-header">
+      <h2>Likes</h2>
+    </div>
+      <?php if (isset($followingLikes)):?>
+      <?php foreach ($followingLikes as $like):?>
+        <div class="row history">
+        <p class="text-center">
+        <a href="<?php echo APP_URL."/user/view/".$like['uname']; ?>">
+        <?php echo $like['uname']?>
+        </a> liked <a href="<?php echo APP_URL."/project/view/".$like['pid']; ?>">
+        <?php echo $like['pname']?></a> at <?php echo $like['time']?>.
+        </p>
+        </div>
+      <?php endforeach;?>
+      <?php else:?>
+        <p class="text-center">None of those you are following liked any project yet.
+      <?php endif;?>
+  </div>
+  
+  <div class="row">
+    <div class="page-header">
+      <h2>Comments</h2>
+    </div>
+      <?php if (isset($followingComments)):?>
+      <?php foreach ($followingComments as $comment):?>
+        <div class="row center-block" style="padding-bottom:30px">
+        <blockquote style="text-align:left;width:auto;display:table;margin:0 auto;background: #fbfbfb;">
+        <p><?php echo $comment['content'];?></p>
+        <footer>
+        <a href="<?php echo APP_URL."/user/view/".$comment['uname']; ?>">
+        <?php echo $comment['uname']?>
+        </a> commented on 
+        <a href="<?php echo APP_URL."/project/view/".$comment['pid']; ?>">
+        <?php echo $comment['pname']?></a> at <?php echo $comment['time']?>.
+        </footer>
+        </blockquote>        
+        </div>
+        
+      <?php endforeach;?>
+      <?php else:?>
+        <p class="text-center">None of those you are following commented any project yet.
       <?php endif;?>
   </div>
 
@@ -61,7 +106,7 @@
         </div>
       <?php endforeach;?>
       <?php else:?>
-        <p class="text-center">None of those you are following funded any project yet.
+        <p class="text-center">None of those you are following rated any project yet.
       <?php endif;?>
   </div>
 </div>

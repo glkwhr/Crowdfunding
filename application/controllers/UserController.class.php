@@ -97,6 +97,12 @@ class UserController extends Controller {
 			if (!empty($followingProjects = (new FollowModel())->getFollowingProjects($uname))) {
 				$this->assign('followingProjects', $followingProjects);
 			}
+			if (!empty($followingLikes = (new FollowModel())->getFollowingLikes($uname))) {
+				$this->assign('followingLikes', $followingLikes);
+			}
+			if (!empty($followingComments = (new FollowModel())->getFollowingComments($uname))) {
+				$this->assign('followingComments', $followingComments);
+			}
 			$this->render();
 		} else {
 			header("location:" . APP_URL . "/user/login");
@@ -244,6 +250,9 @@ class UserController extends Controller {
 			}
 			if (!empty($searchHistory = (new SearchhistoryModel())->getHistory($uname))) {
 				$this->assign('searchHistory', $searchHistory);
+			}
+			if (!empty($likeHistory = (new LikeModel())->getHistory($uname))) {
+				$this->assign('likeHistory', $likeHistory);
 			}
 		} else {
 			header("location:" . APP_URL . "/user/login");
