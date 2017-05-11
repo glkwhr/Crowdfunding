@@ -109,9 +109,11 @@ case 'notfound'
         <h2 class="text-primary"><?php echo date('Y-m-d',strtotime($row['plannedcompletiontime']));?></h2>
         <p class="text-muted">planned completion deadline</p>
       </div>
+      <?php if ($row['status']=='crowdfunding'):?>
       <div class="row">
         <p class="text-muted" style="font-size: 12px; padding-top: 15px; padding-bottom: 10px;">This project will only be funded if it reaches its goal by <?php echo date('Y-m-d',strtotime($row['endtime']));?></p>
       </div>
+      <?php endif;?>
       <div class="row">
 <?php switch ($row['status']):?>
 <?php case 'crowdfunding': ?>
@@ -134,7 +136,42 @@ case 'notfound'
         <h2><a href="#" class="btn btn-lg btn-success btn-block disabled" role="button">Back this project</a></h2>
 <?php break;?>
 <?php case 'completed':?>
-        <h2><a href="#" class="btn btn-lg btn-warning btn-block" role="button">Rate this project</a></h2>
+		<?php if (isset($rateCount) && $rateCount):?>
+		<h1 class="text-success"><?php echo $avgScore;?></h1>
+        <?php else:?>
+        <h2 class="text-muted">--</h2>
+        <?php endif;?>
+        <p class="text-muted">average score from <?php echo $rateCount;?> people</p>
+        <?php if ((isset($hasPledged) && $hasPledged) && (!isset($hasRated) || !$hasRated)):?>
+		<form class="form-inline" action="<?php echo APP_URL ?>/project/rate" method="post">
+		  <div style="width: 100%" class="form-group <?php if (isset($rateError)) { echo 'has-error'; }?>">
+		    <div style="width: 100%" class="input-group">
+		      <input type="hidden" name="pid" value="<?php echo $row['pid'];?>">
+		      <div class="radio">	
+		      	<label class="radio-inline">
+				  <input type="radio" name="rate" id="inlineRadio1" value="1"> 1
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="rate" id="inlineRadio2" value="2"> 2
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="rate" id="inlineRadio3" value="3"> 3
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="rate" id="inlineRadio3" value="4"> 4
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="rate" id="inlineRadio3" checked value="5"> 5
+				</label>
+			  </div>
+		    </div>
+		    <?php if (isset($rateError)): ?>
+		    <span class="help-block"><?php echo $rateError?></span>
+		    <?php endif?>
+	  	  </div>
+          <h2><button type="submit" role="button" class="btn btn-warning btn-lg btn-block">Rate this project</button></h2>
+        </form>
+        <?php endif?>
 <?php endswitch;?>
 <?php if ($mode == 'user'):?>
 	<?php if (isset($hasLiked) && $hasLiked):?>

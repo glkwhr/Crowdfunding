@@ -91,6 +91,40 @@ class ProjectController extends Controller {
 		$this->render();
 	}
 	
+	function rate() {
+		$userModel = new UserModel();
+		if ($userModel->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$data = $userModel->select($_SESSION['user']['username'], array('uname'));
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				if (isset($_POST['pid']) && isset($_POST['rate'])) {
+					$data['pid'] = $_POST['pid'];
+					$data['score'] = $_POST['rate'];
+					$pledgeModel = new PledgeModel();
+					$rateModel = new RateModel();
+					// TODO check the project status
+					if ($pledgeModel->exists($data['uname'], $data['pid']) && !$rateModel->exists($data['uname'], $data['pid'])) {
+						if ($rateModel->add($data)) {
+							$this->assign('mode', 'succeeded');
+						} else {
+							$this->assign('mode', 'failed');
+						}
+					} else {
+						$this->assign('mode', 'denied');
+					}
+				} else {
+					$this->assign('mode', 'failed');
+				}
+				$this->assign('data', $data);
+			}
+			$this->render();
+		} else {
+			header("location:" . APP_URL . "user/login");
+		}
+	}
+	
 	function create() {
 		if (!(new UserModel())->checkLogin()) {
 			// create page can only be accessed by users
@@ -184,15 +218,21 @@ class ProjectController extends Controller {
 			}
 			$likeModel = new LikeModel();
 			$this->assign('likeCount', $likeModel->countLiked($pid));
+			$rateModel = new RateModel();
+			$pledgeModel = new PledgeModel();
 			if ((new UserModel())->checkLogin()) {
 				if (session_status() == PHP_SESSION_NONE) {
 					session_start();
 				}				
 				$this->assign('hasLiked', $likeModel->hasLiked($_SESSION['user']['username'], $pid));
-			}
+				$this->assign('hasPledged', $pledgeModel->exists($_SESSION['user']['username'], $pid));
+				$this->assign('hasRated', $rateModel->exists($_SESSION['user']['username'], $pid));
+			}			
 			
-			$pledgeModel = new PledgeModel();
 			$this->assign('backerCount', $pledgeModel->countBackers($pid));
+			
+			$this->assign('rateCount', $rateModel->countRate($pid));
+			$this->assign('avgScore', number_format($rateModel->avgScore($pid), 1));
 			
 			// get samples
 			if (!empty($samples = (new SampleModel())->getSample($pid))) {
