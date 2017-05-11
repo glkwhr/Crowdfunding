@@ -78,12 +78,13 @@ CREATE TABLE `Comment` (
     FOREIGN KEY (`uname`) REFERENCES `user`(`uname`)
 );
 
+# one user cannot rate the same project again
 CREATE TABLE `Rate` (
 	`uname` VARCHAR(40) NOT NULL,
 	`pid`  INT NOT NULL,
 	`score` FLOAT NULL,
 	`time`  DATETIME NOT NULL,
-	PRIMARY KEY (`pid`,`uname`,`time`),
+	PRIMARY KEY (`pid`,`uname`),
 	FOREIGN KEY (`pid`) REFERENCES `project`(`pid`),
     FOREIGN KEY (`uname`) REFERENCES `user`(`uname`)
 );
@@ -95,6 +96,14 @@ CREATE TABLE `Follow` (
 	PRIMARY KEY (`uname1`,`uname2`),
     FOREIGN KEY (`uname1`) REFERENCES `user`(`uname`),
     FOREIGN KEY (`uname2`) REFERENCES `user`(`uname`)
+);
+
+CREATE TABLE `SearchHistory` (
+	`uname` VARCHAR(40) NOT NULL,
+    `keyword` VARCHAR(40) NOT NULL,
+    `time` DATETIME NOT NULL,
+	PRIMARY KEY (`uname`,`keyword`, `time`),
+    FOREIGN KEY (`uname`) REFERENCES `user`(`uname`)
 );
 
 DROP TRIGGER IF EXISTS `trig_before_insert_pledge`;
@@ -112,3 +121,11 @@ BEGIN
     END IF;
 END;//
 delimiter ;
+
+DROP EVENT IF EXISTS event_charge;
+CREATE EVENT IF NOT EXISTS event_charge
+ON SCHEDULE EVERY 1 MINUTE
+DO
+UPDATE `pledge` AS G
+SET `charged` = TRUE
+WHERE G.`charged` = FALSE AND G.`pid` IN (SELECT `pid` FROM `project` WHERE `status` = 'progressing' OR `status` = 'completed');
