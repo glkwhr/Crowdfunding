@@ -19,6 +19,7 @@ class ProjectModel extends Model {
 			}
 			$this->where($this->getFilter($conds, Sql::OP_LIKE, Sql::LOGIC_OR));
 		}
+		$this->order(array('`posttime` desc'));
 		return $this->selectAll();
 	}
 
