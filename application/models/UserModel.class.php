@@ -116,10 +116,6 @@ class UserModel extends Model {
 		return $ret;
 	}
 	
-	public function getFollowing($uname) {
-		
-	}
-	
 	public function checkLogin() {
 		if (session_status() == PHP_SESSION_NONE) {
 			session_start();

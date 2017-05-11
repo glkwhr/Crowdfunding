@@ -19,7 +19,7 @@
         </div>
       <?php endforeach;?>
       <?php else:?>
-        <p class="text-center">You have not searched any project yet
+        <p class="text-center">You have not searched any project yet.
       <?php endif;?>
   </div>  
   
@@ -37,7 +37,7 @@
         </div>
       <?php endforeach;?>
       <?php else:?>
-        <p class="text-center">You have not backed any project yet
+        <p class="text-center">You have not funded any project yet.
       <?php endif;?>
   </div>  
 
@@ -55,7 +55,7 @@
         </div>
       <?php endforeach;?>
       <?php else:?>
-        <p class="text-center">You have not rated any project yet
+        <p class="text-center">You have not rated any project yet.
       <?php endif;?>
   </div>  
 
