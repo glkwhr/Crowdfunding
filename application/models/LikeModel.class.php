@@ -26,4 +26,11 @@ class LikeModel extends Model {
 		$sth->execute(array(':uname' => $data['uname'], ':pid' => $data['pid']));
 		return $sth->rowCount();
 	}
+	
+	function getHistory($uname) {
+		$sql = "select `like`.`pid` as `pid`, `like`.`uname`, `pname`, `time` from `like` inner join `project` on `like`.`pid`=`project`.`pid` where `like`.`uname`=:uname";
+		$sth = $this->_dbHandle->prepare($sql);
+		$sth->execute(array(':uname' => $uname));
+		return $sth->fetchAll();
+	}
 }

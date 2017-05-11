@@ -21,7 +21,25 @@
       <?php else:?>
         <p class="text-center">You have not searched any project yet.
       <?php endif;?>
-  </div>  
+  </div>
+  
+  <div class="row">
+    <div class="page-header">
+      <h2>Like History</h2>
+    </div>
+      <?php if (isset($likeHistory)):?>
+      <?php foreach ($likeHistory as $like):?>
+        <div class="row history">
+        <p class="text-center">
+        You liked <a href="<?php echo APP_URL."/project/view/".$like['pid']; ?>">
+        <?php echo $like['pname']?></a> at <?php echo $like['time']?>.
+        </p>
+        </div>
+      <?php endforeach;?>
+      <?php else:?>
+        <p class="text-center">You have not liked any project yet.
+      <?php endif;?>
+  </div> 
   
   <div class="row">
     <div class="page-header">
