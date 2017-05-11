@@ -60,7 +60,7 @@ class UserController extends Controller {
 			header('location:' . APP_URL);
 		} else {
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$data = $this->getData();
+				$data = $this->getInsertData();
 				// 1. validate input data 2. assign error message
 				$userModel = new UserModel();
 				if ($res = $userModel->isInvalidInsert($data)) {
@@ -85,8 +85,19 @@ class UserController extends Controller {
 	}
 	
 	function home() {
-		if ((new UserModel())->checkLogin()) {
-			$this->assign('title', 'Timeline');
+		$userModel = new UserModel();
+		if ($userModel->checkLogin()) {
+			$uname = $_SESSION['user']['username'];
+			//$userModel->getFollowing($uname);
+			if (!empty($rateHistory = (new RateModel())->getHistory($uname))) {
+				$this->assign('rateHistory', $rateHistory);
+			}
+			if (!empty($pledgeHistory = (new PledgeModel())->getHistory($uname))) {
+				$this->assign('pledgeHistory', $pledgeHistory);
+			}
+			if (!empty($searchHistory = (new SearchhistoryModel())->getHistory($uname))) {
+				$this->assign('searchHistory', $searchHistory);
+			}			
 			$this->render();
 		} else {
 			header("location:" . APP_URL . "/user/login");
@@ -97,7 +108,7 @@ class UserController extends Controller {
 		$userModel = new UserModel();
 		if ($userModel->checkLogin()) {
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$data = $this->getData();
+				$data = $this->getUpdateData();
 				$res = array();
 				if (empty($userModel->login($data['uname'], $data['upwd'])) || $res = $userModel->isInvalidUpdate($data)) {
 					if (empty($res)) {
@@ -254,7 +265,29 @@ class UserController extends Controller {
 		$this->render();
 	}
 	
-	function getData() {
+	function getInsertData() {
+		$data['uname'] = $this->getInput($_POST['usrname']);
+		$data['upwd'] = $this->getInput($_POST['pwd']);
+		$data['name'] = $this->getInput($_POST['realname']);
+		if (isset($_POST['newpwd']) && !empty($_POST['newpwd'])) {
+			$data['newpwd'] = $this->getInput($_POST['newpwd']);
+		}
+		if (isset($_POST['creditcardnum']) && !empty($_POST['creditcardnum'])) {
+			$data['ccn'] = $this->getInput($_POST['creditcardnum']);
+		}
+		if (isset($_POST['email']) && !empty($_POST['email'])) {
+			$data['email'] = $this->getInput($_POST['email']);
+		}
+		if (isset($_POST['addr']) && !empty($_POST['addr'])) {
+			$data['addr'] = $this->getInput($_POST['addr']);
+		}
+		if (isset($_POST['interest']) && !empty($_POST['interest'])) {
+			$data['interest'] = $this->getInput($_POST['interest']);
+		}
+		return $data;
+	}
+	
+	function getUpdateData() {
 		$data['uname'] = $this->getInput($_POST['usrname']);
 		$data['upwd'] = $this->getInput($_POST['pwd']);
 		$data['name'] = $this->getInput($_POST['realname']);
