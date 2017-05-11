@@ -88,16 +88,15 @@ class UserController extends Controller {
 		$userModel = new UserModel();
 		if ($userModel->checkLogin()) {
 			$uname = $_SESSION['user']['username'];
-			//$userModel->getFollowing($uname);
-			if (!empty($rateHistory = (new RateModel())->getHistory($uname))) {
-				$this->assign('rateHistory', $rateHistory);
+			if (!empty($followingPledges = (new FollowModel())->getFollowingPledges($uname))) {
+				$this->assign('followingPledges', $followingPledges);
 			}
-			if (!empty($pledgeHistory = (new PledgeModel())->getHistory($uname))) {
-				$this->assign('pledgeHistory', $pledgeHistory);
+			if (!empty($followingRates = (new FollowModel())->getFollowingRates($uname))) {
+				$this->assign('followingRates', $followingRates);
 			}
-			if (!empty($searchHistory = (new SearchhistoryModel())->getHistory($uname))) {
-				$this->assign('searchHistory', $searchHistory);
-			}			
+			if (!empty($followingProjects = (new FollowModel())->getFollowingProjects($uname))) {
+				$this->assign('followingProjects', $followingProjects);
+			}
 			$this->render();
 		} else {
 			header("location:" . APP_URL . "/user/login");
