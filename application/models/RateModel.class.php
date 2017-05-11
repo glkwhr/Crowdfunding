@@ -29,4 +29,11 @@ class RateModel extends Model {
 		$sth->execute(array(':pid' => $pid, ':uname' => $uname));
 		return !empty($sth->fetch());
 	}
+	
+	function getHistory($uname) {
+		$sql = "select `rate`.`pid` as `pid`, `rate`.`uname`, `pname`, `score`, `time` from `rate` inner join `project` on `rate`.`pid`=`project`.`pid` where `rate`.`uname`=:uname";
+		$sth = $this->_dbHandle->prepare($sql);
+		$sth->execute(array(':uname' => $uname));
+		return $sth->fetchAll();
+	}
 }

@@ -20,4 +20,11 @@ class PledgeModel extends Model {
 		$sth->execute(array(':pid' => $pid, ':uname' => $uname));
 		return !empty($sth->fetch());
 	}
+	
+	function getHistory($uname) {
+		$sql = "select `pledge`.`pid` as `pid`, `pledge`.`uname`, `pname`, `amount`, `time` from `pledge` inner join `project` on `pledge`.`pid`=`project`.`pid` where `pledge`.`uname`=:uname";
+		$sth = $this->_dbHandle->prepare($sql);
+		$sth->execute(array(':uname' => $uname));
+		return $sth->fetchAll();
+	}
 }

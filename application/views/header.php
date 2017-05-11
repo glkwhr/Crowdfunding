@@ -70,7 +70,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <li><a href="<?php echo APP_URL?>/user/profile">Profile</a></li>
             <li><a href="<?php echo APP_URL?>/project/user/<?php echo $_SESSION['user']['username']?>">My Projects</a></li>
             <li><a href="<?php echo APP_URL?>/user/pledges">My Pledges</a></li>
-            <li><a href="<?php echo APP_URL?>/user/history">Browsing History</a></li>
+            <li><a href="<?php echo APP_URL?>/user/history">History</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="<?php echo APP_URL?>/user/logout">Logout</a></li>
           </ul>

@@ -13,6 +13,9 @@ class ProjectController extends Controller {
 			if (session_status() == PHP_SESSION_NONE) {
 				session_start();
 			}
+			if (!empty($keyword)) {
+				(new SearchhistoryModel())->add(array('uname'=>$_SESSION['user']['username'], 'keyword'=>$keyword));
+			}
 			$this->assign('user', $_SESSION['user']['username']);
 			$this->assign('likeModel', new LikeModel());
 		}

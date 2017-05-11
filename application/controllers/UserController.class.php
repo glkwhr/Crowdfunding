@@ -220,7 +220,38 @@ class UserController extends Controller {
 	}
 	
 	function history() {
-		
+		$userModel = new UserModel();
+		if ($userModel->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$uname = $_SESSION['user']['username'];
+			if (!empty($rateHistory = (new RateModel())->getHistory($uname))) {
+				$this->assign('rateHistory', $rateHistory);
+			}
+			if (!empty($pledgeHistory = (new PledgeModel())->getHistory($uname))) {
+				$this->assign('pledgeHistory', $pledgeHistory);
+			}
+			if (!empty($searchHistory = (new SearchhistoryModel())->getHistory($uname))) {
+				$this->assign('searchHistory', $searchHistory);
+			}
+		} else {
+			header("location:" . APP_URL . "/user/login");
+		}
+		$this->render();
+	}
+	
+	function clearSearch() {
+		$userModel = new UserModel();
+		if ($userModel->checkLogin()) {
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start();
+			}
+			$searchHistory = new SearchhistoryModel();
+			$searchHistory->clear($_SESSION['user']['username']);
+			header("location:".APP_URL."/user/history");
+		}
+		$this->render();
 	}
 	
 	function getData() {
